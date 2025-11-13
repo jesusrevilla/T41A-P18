@@ -1,9 +1,4 @@
-¡Claro que sí! Aquí tienes el Workflow de GitHub Actions y el archivo de Tests Python completos, incluyendo los cuatro archivos SQL en la secuencia correcta.
 
-🛠️ 1. Workflow Completo (.github/workflows/main.yml)
-Este flujo ejecuta tus cuatro scripts SQL en orden (01_, 02_, 03_, y 04_) antes de correr las pruebas de Python.
-
-YAML
 
 name: Run PostgreSQL Tests
 
