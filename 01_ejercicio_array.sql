@@ -1,12 +1,12 @@
 CREATE TABLE productos(
   id SERIAL PRIMARY KEY,
   nombre TEXT,
-  categoria TEXT[]
+  etiqueta TEXT[]
 );
 
-INSERT INTO productos (nombre, categoria)
+INSERT INTO productos (nombre, etiqueta)
 VALUES ('Teclado Gamer', ARRAY['Tecnología', 'Perifericos', 'Gamer']),
 ('Refrigerador', ARRAY['Tecnología', 'Hogar', 'Linea Blanca']),
 ('Camisa de vestir blanca', ARRAY['Ropa', 'Moda', 'Caballero']);
 
-SELECT * FROM productos WHERE 'Tecnología' = ANY(categoria);
+SELECT * FROM productos WHERE 'Tecnología' = ANY(etiqueta);
