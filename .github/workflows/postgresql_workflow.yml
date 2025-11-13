@@ -1,4 +1,4 @@
-name: Run PostgreSQL Recursive CTE Demo
+name: Run PostgreSQL Tests
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
+          --health-ccmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -32,7 +32,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.X'
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
@@ -40,8 +40,7 @@ jobs:
         pip install -r requirements.txt      
 
     - name: Wait for PostgreSQL
-      run: |
-        sleep 10
+      run: sleep 10
 
     - name: Create employees table
       run: |
@@ -53,9 +52,8 @@ jobs:
 
     - name: Run recursive CTE query
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 03_Recursive_CTE.sql          
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 03_Recursive_CTE.sql
 
     - name: Run unit tests
       run: |
         pytest -vv
-
