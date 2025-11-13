@@ -55,7 +55,7 @@ def test_funcion_obtener_subordinados_de_jefe_2(db_conn):
 def test_funcion_obtener_ciudades_alcanzables(db_conn):
     query = """
     SELECT * FROM obtener_ciudades_alcanzables(1)
-    ORDER BY id_ciudad, distancia; -- Ordenar para una aserción predecible
+    ORDER BY id_ciudad, distancia;
     """
     result = run_query(db_conn, query)
 
