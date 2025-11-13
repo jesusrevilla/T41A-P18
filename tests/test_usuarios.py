@@ -1,7 +1,6 @@
 import psycopg2
 import pytest
 
-# Configuración de la base de datos
 DB_CONFIG = {
     "host": "localhost",
     "database": "test_db",
@@ -27,25 +26,22 @@ def setup_database():
     """Crea la tabla 'usuarios' y carga datos de prueba antes de ejecutar los tests."""
     with psycopg2.connect(**DB_CONFIG) as conn:
         with conn.cursor() as cur:
-            # Crear tabla si no existe
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS usuarios (
                     id SERIAL PRIMARY KEY,
                     data JSONB NOT NULL
                 );
             """)
-            # Limpiar datos anteriores
             cur.execute("DELETE FROM usuarios;")
-
-            # Insertar datos de prueba
+            # Reinicia la secuencia de IDs
+            cur.execute("ALTER SEQUENCE usuarios_id_seq RESTART WITH 1;")
+            # Inserta los datos
             cur.execute("""
                 INSERT INTO usuarios (data) VALUES
                     ('{"nombre": "Ana", "activo": true, "edad": 30}'),
                     ('{"nombre": "Juan", "activo": false, "edad": 25}');
             """)
         conn.commit()
-
-
 
 
 def test_nombre_ana():
@@ -58,7 +54,6 @@ def test_nombre_ana():
 def test_usuario_activo():
     """Verifica que el usuario con id=1 está activo."""
     result = run_query("SELECT data->>'activo' FROM usuarios WHERE id = 1;")
-    # data->>'activo' devuelve 'true' como texto, no booleano
     assert result[0][0] == "true"
 
 
