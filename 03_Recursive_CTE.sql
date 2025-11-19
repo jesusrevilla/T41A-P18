@@ -1,41 +1,27 @@
-CREATE TABLE rutas (
-    origen TEXT,
-    destino TEXT
-);
 
+-- Subordinados de "Ana (Jefa)"
+WITH RECURSIVE red_empleados AS (
+    SELECT id, nombre, jefe_id 
+    FROM empleados 
+    WHERE jefe_id = 1  -- Maria depende de Ana
 
-INSERT INTO rutas (origen, destino) VALUES
-('Madrid', 'Barcelona'),
-('Madrid', 'Valencia'),
-('Valencia', 'Sevilla'),
-('Sevilla', 'Granada'),
-('Barcelona', 'Zaragoza'),
-('Zaragoza', 'Bilbao'),
-('Granada', 'Málaga');
+    UNION ALL
 
-
-
-WITH RECURSIVE conexiones AS (
-    SELECT origen, destino
-    FROM rutas
-    WHERE origen = 'Madrid'
-    UNION
-    SELECT r.origen, r.destino
-    FROM rutas r
-    INNER JOIN conexiones c ON r.origen = c.destino
+    SELECT e.id, e.nombre, e.jefe_id
+    FROM empleados e
+    INNER JOIN red_empleados r ON e.jefe_id = r.id
 )
-SELECT DISTINCT destino AS ciudad_alcanzable
-FROM conexiones;
+SELECT * FROM red_empleados;
 
 
-WITH RECURSIVE mapa AS (
-    SELECT origen, destino
-    FROM rutas
-    WHERE origen = 'Madrid'
-    UNION
-    SELECT r.origen, r.destino
-    FROM rutas r
-    INNER JOIN mapa m ON r.origen = m.destino
-)
-SELECT * FROM mapa;
+-- Productos con etiqueta "tecnología"
+SELECT nombre 
+FROM productos
+WHERE 'tecnología' = ANY(etiquetas);
+
+
+-- Mostrar primera etiqueta por producto
+SELECT nombre, etiquetas[1] AS primera_etiqueta
+FROM productos;
+
 
