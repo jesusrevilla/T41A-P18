@@ -1,25 +1,16 @@
--- CEO
-INSERT INTO empleados (nombre, jefe_id)
-VALUES ('Carlos CEO', NULL);
+-- --- Ejercicio 1: Arrays (Productos) ---
+INSERT INTO productos (nombre, etiquetas) VALUES
+('Laptop Pro', ARRAY['tecnología', 'electrónica', 'computadora']),
+('Teclado Mecánico RGB', ARRAY['tecnología', 'periférico']),
+('Monitor 4K UHD', ARRAY['tecnología', 'monitor', 'electrónica']),
+('Libro de Cocina', ARRAY['libros', 'cocina', 'hogar']),
+('Sartén de Hierro', ARRAY['cocina', 'hogar']);
 
--- Directores
-INSERT INTO empleados (nombre, jefe_id)
-VALUES ('Ana Directora Finanzas', 1),
-       ('Luis Director TI', 1),
-       ('María Directora Marketing', 1);
-
--- Subordinados de Finanzas
-INSERT INTO empleados (nombre, jefe_id)
-VALUES ('Pedro Analista Finanzas', 2),
-       ('Lucía Contadora', 2);
-
--- Subordinados de TI
-INSERT INTO empleados (nombre, jefe_id)
-VALUES ('Javier SysAdmin', 3),
-       ('Sofía Desarrolladora', 3),
-       ('Miguel QA Tester', 3);
-
--- Subordinados de Marketing
-INSERT INTO empleados (nombre, jefe_id)
-VALUES ('Sandra Diseñadora', 4),
-       ('Diego Social Media', 4);
+-- --- Ejercicio 2: CTE Recursiva (Empleados) ---
+INSERT INTO empleados (id, nombre, jefe_id) VALUES
+(1, 'Carlos (CEO)', NULL),
+(2, 'Ana (Gerente)', 1),
+(3, 'David (Gerente)', 1),
+(4, 'Maria (Desarrollador)', 2),
+(5, 'Pedro (Desarrollador)', 3),
+(6, 'Luis (Pasante)', 4);
