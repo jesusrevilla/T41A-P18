@@ -1,18 +1,41 @@
---- Consulta Ejercicio 1: Productos con la etiqueta "tecnología" ---'
-SELECT * FROM productos 
-WHERE 'tecnología' = ANY(etiquetas);
+CREATE TABLE rutas (
+    origen TEXT,
+    destino TEXT
+);
 
---- Consulta Ejercicio 2: Subordinados de "Ana (Gerente)" (ID 2) ---
-WITH RECURSIVE red_empleados AS (
-    SELECT id, nombre, jefe_id
-    FROM empleados
-    WHERE jefe_id = 2
 
-    UNION ALL
+INSERT INTO rutas (origen, destino) VALUES
+('Madrid', 'Barcelona'),
+('Madrid', 'Valencia'),
+('Valencia', 'Sevilla'),
+('Sevilla', 'Granada'),
+('Barcelona', 'Zaragoza'),
+('Zaragoza', 'Bilbao'),
+('Granada', 'Málaga');
 
-    SELECT e.id, e.nombre, e.jefe_id
-    FROM empleados e
-    INNER JOIN red_empleados r ON e.jefe_id = r.id
+
+
+WITH RECURSIVE conexiones AS (
+    SELECT origen, destino
+    FROM rutas
+    WHERE origen = 'Madrid'
+    UNION
+    SELECT r.origen, r.destino
+    FROM rutas r
+    INNER JOIN conexiones c ON r.origen = c.destino
 )
-SELECT * FROM red_empleados;
+SELECT DISTINCT destino AS ciudad_alcanzable
+FROM conexiones;
+
+
+WITH RECURSIVE mapa AS (
+    SELECT origen, destino
+    FROM rutas
+    WHERE origen = 'Madrid'
+    UNION
+    SELECT r.origen, r.destino
+    FROM rutas r
+    INNER JOIN mapa m ON r.origen = m.destino
+)
+SELECT * FROM mapa;
 
