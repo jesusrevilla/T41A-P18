@@ -41,17 +41,24 @@ jobs:
     - name: Wait for PostgreSQL
       run: sleep 10
 
+    - name: Show repo structure
+      run: ls -R
+
     - name: Run SQL - Create Tables
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f tests/01_Create_Table.sql
+        echo "Ejecutando 01_Create_Table.sql"
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_Create_Table.sql
 
     - name: Run SQL - Insert Data
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f tests/02_Insert_Data.sql
+        echo "Ejecutando 02_Insert_Data.sql"
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 02_Insert_Data.sql
 
     - name: Run SQL - Execute CTEs
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f tests/03_Recursive_CTE.sql
+        echo "Ejecutando 03_Recursive_CTE.sql"
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 03_Recursive_CTE.sql
 
     - name: Run unit tests
       run: pytest -vv
+
