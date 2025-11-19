@@ -2,9 +2,9 @@ name: Run PostgreSQL Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   test:
@@ -31,7 +31,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.X'
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
@@ -39,21 +39,19 @@ jobs:
         pip install -r requirements.txt      
 
     - name: Wait for PostgreSQL
-      run: |
-        sleep 10
+      run: sleep 10
 
-    - name: Set up database schema and data
+    - name: Run SQL - Create Tables
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_Create_Table.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f tests/01_Create_Table.sql
 
-    - name: Insert data
+    - name: Run SQL - Insert Data
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_Create_Table.sql      
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f tests/02_Insert_Data.sql
 
-    - name: Query data
+    - name: Run SQL - Execute CTEs
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_Create_Table.sql          
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f tests/03_Recursive_CTE.sql
 
     - name: Run unit tests
-      run: |
-        pytest -vv
+      run: pytest -vv
