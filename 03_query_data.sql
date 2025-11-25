@@ -24,4 +24,4 @@ WITH RECURSIVE rutas AS (
     FROM ciudades c
     JOIN rutas r ON c.id = ANY(r.conexiones)
 )
-SELECT nombre FROM rutas;
+SELECT DISTINCT nombre FROM rutas;
