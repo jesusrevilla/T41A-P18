@@ -31,29 +31,38 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.X'
+        python-version: '3.9'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt      
+        pip install psycopg2-binary pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Wait for PostgreSQL
       run: |
-        sleep 10
+        for i in {1..10}; do
+          pg_isready -h localhost -U postgres -d test_db && break
+          sleep 2
+        done
 
-    - name: Set up database schema and data
+    - name: Create and populate test database
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_create_tables.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_Ejercicio_Propuesto_Arrays.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 02_Ejercicio_Propuesto_CTE_Empleados.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 03_Ejercicio_Grafos_Ciudades.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 04_Test_Ejercicios.sql
 
-    - name: Insert data
+    - name: Run Python tests
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 02_insert_data.sql      
+        python -m pytest test_postgresql_features.py -v
 
-    - name: Query data
+    - name: Run additional queries verification
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 03_query_data.sql          
-
-    - name: Run unit tests
-      run: |
-        pytest -vv
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -c "
+        -- Verificar datos finales
+        SELECT 'Productos:' as categoria; SELECT COUNT(*) as total_productos FROM productos;
+        SELECT 'Empleados:' as categoria; SELECT COUNT(*) as total_empleados FROM empleados;
+        SELECT 'Ciudades:' as categoria; SELECT COUNT(*) as total_ciudades FROM ciudades;
+        SELECT 'Rutas:' as categoria; SELECT COUNT(*) as total_rutas FROM rutas;
+        "
