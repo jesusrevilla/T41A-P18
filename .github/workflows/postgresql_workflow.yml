@@ -1,4 +1,4 @@
-name: Run PostgreSQL Tests
+name: Run PostgreSQL NoSQL Tests
 
 on:
   push:
@@ -31,29 +31,31 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.X'
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt      
+        pip install pytest psycopg2
 
     - name: Wait for PostgreSQL
       run: |
+        echo "Esperando que PostgreSQL inicie..."
         sleep 10
 
-    - name: Set up database schema and data
+    - name: Create tables
       run: |
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_create_tables.sql
 
     - name: Insert data
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 02_insert_data.sql      
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 02_insert_data.sql
 
-    - name: Query data
+    - name: Run queries
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 03_query_data.sql          
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 03_query_data.sql
 
-    - name: Run unit tests
+    - name: Run Python tests
       run: |
         pytest -vv
+
